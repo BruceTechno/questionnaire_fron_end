@@ -38,6 +38,11 @@ export default {
         },
         goEdit(topicNumber) {
             this.$router.push(`/EditTopicView/?${topicNumber}`)
+        },
+        addTopic(){
+            this.$router.push(`/AddTopicView`)
+
+            
         }
     },
 }
@@ -57,7 +62,7 @@ export default {
         </div>
 
         <div class="addTopic">
-            <button type="button">新增問卷</button>
+            <button type="button" @click="addTopic">新增問卷</button>
         </div>
         <div class="list">
             <table>

@@ -6,7 +6,7 @@ export default {
     },
     data() {
         return {
-          
+            
         }
     },
     mounted() {
@@ -17,8 +17,8 @@ export default {
 
 <template>
     <div class="wraaper">
-        <h2>Edit Page</h2>
-        <TopicDetail :addOrEdit="'edit'" />
+        <h2>Add Page</h2>
+        <TopicDetail :addOrEdit="'add'" />
     </div>
 </template>
 
