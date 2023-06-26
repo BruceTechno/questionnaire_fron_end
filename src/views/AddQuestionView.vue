@@ -3,24 +3,34 @@ export default {
     data() {
         return {
             topicBodyStr: null,
+            //input bar v-model以下
             question: null,
             must: false,
             option: null,
             type: 1,
             endTime: 0,
+            //input bar v-model以上
             tempQ: [],
-            tempOptions:[],
+            tempOptions: [],
             tempType: [],
             tempMust: [],
-            questionList:[],
+            result: {
+                questionList: []
+            },
+            test: {
+                message: null,
+                questionList: []
+            },
+            //問題的編輯按下去 上面的加入會變 編輯
+            joinOrEdit: true,
+            // 為了要知道 是要對哪一個問題的編號做編輯
+            numberForEdit: 0
         }
     },
     mounted() {
 
     },
-    updated() {
 
-    },
     methods: {
         addTopicAndQuestion() {
             // this.topicBodyStr = localStorage.getItem('body');
@@ -75,48 +85,99 @@ export default {
                 })
         },// method : addTopicAndQuestion 到此
         addToUnder() {
-            if (this.question == null ||  this.option == null) {//this.tempType == null ||
+            if (this.question == null || this.option == null) {//this.tempType == null ||
                 window.alert("有資料沒填寫")
                 return
-            }
+            }//a b
             this.tempQ.push(`${this.question}`);
             this.tempOptions.push(`${this.option}`);
             this.tempType.push(`${this.type}`);
             this.tempMust.push(`${this.must}`);
-            // this.questionList.push(this.tempOptions)
-            // this.questionList.push(this.tempType)
-            // this.questionList.push(this.tempMust)
-            //存成 物件
-        //   for (let i = 0 ; i < this.tempQ.length+1 ; i++){
-        //     this.questionList = {
-        //         questionList:[ {
-        //             question:this.tempQ[i],
-        //             option:this.tempOptions[i],
-        //             type:this.tempType[i],
-        //             must:this.tempMust[i]
-        //         } ]                
-        //     }
-        //   }
-           localStorage.setItem('tempQ',this.tempQ)
-           localStorage.setItem('tempO',this.tempOptions)
-           localStorage.setItem('tempT',this.tempType)
-           localStorage.setItem('tempM',this.tempMust)
-                 console.log(this.tempQ);
 
-            console.log(this.tempOptions);
-            console.log(this.tempType);
-            console.log(this.tempMust);
+            for (let i = 0; i < this.tempQ.length + 1; i++) {
+                this.test.questionList.push({
+                    name: this.tempQ[i],
+                    options: this.tempOptions[i],
+                    type: this.tempType[i],
+                    must: this.tempMust[i]
+                })
+                delete this.tempQ[i]
+                delete this.tempOptions[i]
+                delete this.tempType[i]
+                delete this.tempMust[i]
+            }
+
+            this.test.questionList = this.test.questionList.filter((item, index, self) => {
+                return (item.name !== undefined && item.options !== undefined && item.type !== undefined && item.must !== undefined)
+            })
+            console.log(this.tempQ);
+            console.log("here");
+            console.log(this.test.questionList);
+            localStorage.setItem('questionList', JSON.stringify(this.test.questionList));
+
             // reset成null alert才能偵測 有資料沒填寫
             this.question = null
             this.option = null
-          
+            this.type = 1
+            this.must = false
+        },
+        deleteQuetion(name) {
+            this.test.questionList = this.test.questionList.filter(item => {
+                return item.name !== name
+            })
+        },
+        goEdit(name, option, type, must, index) {
+            this.question = name;
+            this.option = option;
+            this.type = type;
+            this.must = must;
+            this.joinOrEdit = false;
+            this.numberForEdit = index
+        },
+
+        editToUnder() {
+            console.log(this.numberForEdit);
+            if (this.question == null || this.option == null) {//this.tempType == null ||
+                window.alert("有資料沒填寫")
+                return
+            }//a b
+            // this.tempQ.push(`${this.question}`);
+            // this.tempOptions.push(`${this.option}`);
+            // this.tempType.push(`${this.type}`);
+            // this.tempMust.push(`${this.must}`);
+
+            //     this.test.questionList.push({
+            //     name: this.tempQ[this.numberForEdit],
+            //     options: this.tempOptions[this.numberForEdit],
+            //     type: this.tempType[this.numberForEdit],
+            //     must: this.tempMust[this.numberForEdit]
+            // })
+
+            this.test.questionList = JSON.parse(localStorage.getItem("questionList"))
+            console.log(this.test.questionList);
+            //直接複寫 即為更新
+            this.test.questionList[this.numberForEdit]={
+                name: this.question,
+                options: this.option,
+                type: this.type,
+                must: this.must
+            }
+            localStorage.setItem('questionList', JSON.stringify(this.test.questionList));
+            // reset成null alert才能偵測 有資料沒填寫
+            this.question = null
+            this.option = null
+            this.type = 1
+            this.must = false
+            this.joinOrEdit = true;
         }
+
     }
-}
+};
 </script>
 
 <template>
     <div>
+        <h1>新增問題頁面</h1>
         <p>問題</p>
         <input type="text" v-model="question">
         <select name="" id="" v-model="type">
@@ -128,22 +189,11 @@ export default {
         <p>選項</p>
         <input type="text" v-model="option">
         <span>(多個答案以;分隔)</span>
-        <button type="button" @click="addToUnder">加入</button>
-        <div class="number" v-for="(item,index) in tempQ" :key="index">
-        <p>編號{{ index+1 }}</p>
-        <p>問題{{ item[index] }}</p>
-        </div>
-        <div class="option" v-for="(item,index) in tempO" :key="index">
-        <p>選項{{item[index]}}</p>
-        </div>
-        <div class="type" v-for="(item,index) in tempType" :key="index">
-        <p>種類{{item[index]}}</p>
-        </div>
-        <div class="type" v-for="(item,index) in tempMust" :key="index">
-        <p>必填{{item[index]}}</p>
-        </div>
+        <button v-if="joinOrEdit == true" type="button" @click="addToUnder">加入</button>
+        <button v-else type="button" @click="editToUnder">編輯</button>
 
-        <!-- <div class="list">
+
+        <div class="list">
             <table>
                 <tr>
                     <th>編號</th>
@@ -152,22 +202,20 @@ export default {
                     <th>必填</th>
 
                 </tr>
-                <tr v-for="(item, index) in tempQ" :key="index">
-                    <td>{{ index+1 }}</td>
+                <tr v-for="(item, index) in test.questionList" :key="index">
+                    <td>{{ index + 1 }}</td>
                     <td>{{ item.name }}</td>
-                    <td>{{ getStatus(item.startTime, item.endTime) }}</td>
-                    <td>{{ item.startTime }}</td>
-                    <td>{{ item.endTime }}</td>
-                    <td>觀看 </td>
+                    <td>{{ item.type }}</td>
+                    <td>{{ item.must }}</td>
                     <td>
-                        <button type="button">刪除</button>
-                        <button type="button" @click="goEdit(item.number)">編輯</button>
+                        <button type="button" @click="deleteQuetion(item.name)">刪除</button>
+                        <button type="button" @click="goEdit(item.name, item.options, item.type, item.must, index)">編輯</button>
                     </td>
 
                 </tr>
             </table>
 
-        </div> -->
+        </div>
 
     </div>
     <button type="button">取消</button>
