@@ -62,16 +62,23 @@ export default {
                 })
 
             //新增問題API                       
-            const questionBody = {
-                number: localStorage.getItem('number'),
-                question: this.question,
-                options: this.option,
-                type: this.type,
-                must: this.must,
-                endTime: 20260606,
+            let sessionInfo = JSON.parse(localStorage.getItem("questionList"))
+            let questionBody ={
+                questionList:[
+                    {
+                        topicNumber :2287,
+                        question :sessionInfo[0].name,
+                        options :sessionInfo[0].options,
+                        type :sessionInfo[0].type,
+                        must:sessionInfo[0].must
 
+                    }
+                ]
+                
             }
-            console.log(questionBody);
+            console.log("heerwrwerehere");
+          console.log(questionBody);
+            // console.log(questionBody);
             fetch("http://localhost:8080/add_question", {
                 method: "POST",
                 headers: {
