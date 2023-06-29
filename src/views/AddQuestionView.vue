@@ -33,9 +33,6 @@ export default {
 
     methods: {
         addTopicAndQuestion() {
-            // this.topicBodyStr = localStorage.getItem('body');
-            // console.log(JSON.stringify(this.topicBodyStr));
-
             //新增問卷API
             const topicBody = {
                 number: localStorage.getItem('number'),
@@ -49,7 +46,7 @@ export default {
                 description: localStorage.getItem('description')
             }
             console.log(topicBody);
-            fetch("http://localhost:8080/add_topic", {
+            fetch("http://localhost:8080/get_users_who_answer_this_topic", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -63,28 +60,33 @@ export default {
 
             //新增問題API                       
             let sessionInfo = JSON.parse(localStorage.getItem("questionList"))
-            let questionBody ={
-                questionList:[
-                    {
-                        topicNumber :2287,
-                        question :sessionInfo[0].name,
-                        options :sessionInfo[0].options,
-                        type :sessionInfo[0].type,
-                        must:sessionInfo[0].must
-
-                    }
-                ]
-                
+            console.log("here132");
+            console.log(sessionInfo);
+            let questionBodyII = {
+                questionList: [{}]
             }
+            for (let i = 0; i < sessionInfo.length; i++) {
+                questionBodyII.questionList.push({
+                    topicNumber: localStorage.getItem("number"),
+                    question: sessionInfo[i].name,
+                    options: sessionInfo[i].options,
+                    type: sessionInfo[i].type,
+                    must: sessionInfo[i].must
+                })
+            }
+            // ++這個filter 不然questionList 會有一個空陣列 => 0:[]
+            questionBodyII.questionList = questionBodyII.questionList.filter((item)=>{
+                return item.topicNumber == localStorage.getItem("number")
+            })
             console.log("heerwrwerehere");
-          console.log(questionBody);
+            console.log(questionBodyII);
             // console.log(questionBody);
             fetch("http://localhost:8080/add_question", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(questionBody)
+                body: JSON.stringify(questionBodyII)
             })
                 .then(res => res.json())
                 .then(data => {
@@ -95,12 +97,12 @@ export default {
             if (this.question == null || this.option == null) {//this.tempType == null ||
                 window.alert("有資料沒填寫")
                 return
-            }//a b
+            }//把輸入的問題資料都先存到陣列裡面
             this.tempQ.push(`${this.question}`);
             this.tempOptions.push(`${this.option}`);
             this.tempType.push(`${this.type}`);
             this.tempMust.push(`${this.must}`);
-
+            // 創一個 物件放剛剛的陣列進去
             for (let i = 0; i < this.tempQ.length + 1; i++) {
                 this.test.questionList.push({
                     name: this.tempQ[i],
@@ -108,6 +110,7 @@ export default {
                     type: this.tempType[i],
                     must: this.tempMust[i]
                 })
+                //把push進去了的東西刪掉 不然會重複
                 delete this.tempQ[i]
                 delete this.tempOptions[i]
                 delete this.tempType[i]
@@ -117,9 +120,9 @@ export default {
             this.test.questionList = this.test.questionList.filter((item, index, self) => {
                 return (item.name !== undefined && item.options !== undefined && item.type !== undefined && item.must !== undefined)
             })
-            console.log(this.tempQ);
             console.log("here");
             console.log(this.test.questionList);
+            //把處理好的問題資料儲存進 localstorage
             localStorage.setItem('questionList', JSON.stringify(this.test.questionList));
 
             // reset成null alert才能偵測 有資料沒填寫
@@ -132,6 +135,7 @@ export default {
             this.test.questionList = this.test.questionList.filter(item => {
                 return item.name !== name
             })
+            localStorage.setItem('questionList',JSON.stringify(this.test.questionList));
         },
         goEdit(name, option, type, must, index) {
             this.question = name;
@@ -163,7 +167,7 @@ export default {
             this.test.questionList = JSON.parse(localStorage.getItem("questionList"))
             console.log(this.test.questionList);
             //直接複寫 即為更新
-            this.test.questionList[this.numberForEdit]={
+            this.test.questionList[this.numberForEdit] = {
                 name: this.question,
                 options: this.option,
                 type: this.type,
@@ -216,7 +220,8 @@ export default {
                     <td>{{ item.must }}</td>
                     <td>
                         <button type="button" @click="deleteQuetion(item.name)">刪除</button>
-                        <button type="button" @click="goEdit(item.name, item.options, item.type, item.must, index)">編輯</button>
+                        <button type="button"
+                            @click="goEdit(item.name, item.options, item.type, item.must, index)">編輯</button>
                     </td>
 
                 </tr>

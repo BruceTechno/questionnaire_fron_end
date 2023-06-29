@@ -5,6 +5,8 @@ import ForestageHomeView from "../views/ForestageHomeView.vue"
 import EditTopicView from "../views/EditTopicView.vue"
 import AddTopicView from "../views/AddTopicView.vue"
 import AddQuestionView from "../views/AddQuestionView.vue"
+import FeedBackPageView from "../views/FeedBackPageView.vue"
+import FeedBackDetailView from "../views/FeedBackDetailView.vue"
 
 
 
@@ -46,6 +48,16 @@ const router = createRouter({
       path: '/AddQuestionView',
       name: 'AddQuestionView',
       component: AddQuestionView
+    },
+    {
+      path: '/FeedBackPageView',
+      name: 'FeedBackPageView',
+      component: FeedBackPageView
+    },
+    {
+      path: '/FeedBackDetailView',
+      name: 'FeedBackDetailView',
+      component: FeedBackDetailView
     },
    
 

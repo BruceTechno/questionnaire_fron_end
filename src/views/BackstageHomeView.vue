@@ -39,12 +39,14 @@ export default {
         goEdit(topicNumber) {
             this.$router.push(`/EditTopicView/?${topicNumber}`)
         },
-        addTopic(){
+        addTopic() {
             this.$router.push(`/AddTopicView`)
+        },
+        goFeedBack(topicNumber) {
+            this.$router.push(`/FeedBackPageView/?${topicNumber}`)
 
-            
         }
-    },
+    }
 }
 </script>
 
@@ -80,7 +82,7 @@ export default {
                     <td>{{ getStatus(item.startTime, item.endTime) }}</td>
                     <td>{{ item.startTime }}</td>
                     <td>{{ item.endTime }}</td>
-                    <td>觀看 </td>
+                    <td><button type="button" @click="goFeedBack(item.number)">觀看</button></td>
                     <td>
                         <button type="button">刪除</button>
                         <button type="button" @click="goEdit(item.number)">編輯</button>
