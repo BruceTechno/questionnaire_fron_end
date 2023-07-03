@@ -8,7 +8,14 @@ export default {
             startTime: null,
             endTime: null,
             now: null,
-            status: null
+            status: null,
+
+            totalPage: 0,//總頁數
+            pageNumber: 3,//每頁多少筆數據
+            pageArr: [],
+            page: 0,// 現在的頁數
+            newData: [],
+            topicListLength: 0
         }
     },
     mounted() {
@@ -19,12 +26,33 @@ export default {
             .then(data => {
                 console.log(data);
                 this.topicList = data.topicList
-                console.log(typeof data.topicList[1].startTime);
-            }),
+                this.topicListLength = this.topicList.length;
+                console.log(this.topicListLength);
+                this.totalPage = this.topicListLength / this.pageNumber
+                this.getPageData(1)
+
+        
+            })
+        if (this.time.getDate() < 10) {
+            this.now = `${this.time.getFullYear()}0${this.time.getMonth() + 1}0${this.time.getDate()}`
+        } else {
             this.now = `${this.time.getFullYear()}0${this.time.getMonth() + 1}${this.time.getDate()}`
+        }
 
     },
     methods: {
+        addPage() {
+            for (let i = 0; i < this.totalPage; i++) {
+                this.pageArr[i] = i + 1;
+            }
+            return this.pageArr;
+        },
+        //先識別出現在就是在那一頁 將值賦予給page
+        getPageData(index) {
+            this.page = index //獲取當前的頁數是多少
+            this.newData = this.topicList.slice((this.page - 1) * this.pageNumber, (this.page) * this.pageNumber);
+        },
+
         getStatus(start, end) {
             if (+this.now < start) {
                 return "未開放"
@@ -45,6 +73,26 @@ export default {
         goFeedBack(topicNumber) {
             this.$router.push(`/FeedBackPageView/?${topicNumber}`)
 
+        },
+        deleteTopic(topicNumber) {
+            let body = {
+                number: topicNumber
+            }
+            fetch("http://localhost:8080/delete_topic", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(body)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    window.alert(data.message)
+                    console.log(data);
+                    if (data.message === "Successful!!") {
+                        window.location.reload();
+                    }
+                })
         }
     }
 }
@@ -76,7 +124,7 @@ export default {
                     <th>結束時間</th>
                     <th>統計</th>
                 </tr>
-                <tr v-for="(item, index) in topicList" :key="index">
+                <tr v-for="(item, index) in newData" :key="index">
                     <td>{{ item.number }}</td>
                     <td>{{ item.name }}</td>
                     <td>{{ getStatus(item.startTime, item.endTime) }}</td>
@@ -84,17 +132,24 @@ export default {
                     <td>{{ item.endTime }}</td>
                     <td><button type="button" @click="goFeedBack(item.number)">觀看</button></td>
                     <td>
-                        <button type="button">刪除</button>
+                        <button type="button" @click="deleteTopic(item.number)">刪除</button>
                         <button type="button" @click="goEdit(item.number)">編輯</button>
                     </td>
 
                 </tr>
             </table>
+            <div id="page">
+
+            </div>
 
         </div>
+        <ul class="pagination">
+            <li><a href="#">上一頁</a></li>
+            <li v-for="m in addPage()"><a href="#" @click="getPageData(m)"> {{ m }}</a></li>
+            <li><a href="#">下一頁</a></li>
+        </ul>
     </div>
     <div>
-
 
     </div>
 </template>

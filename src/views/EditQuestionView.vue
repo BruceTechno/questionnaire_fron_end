@@ -2,7 +2,10 @@
 export default {
     data() {
         return {
-            topicNumber:0,
+         number:0,
+         questionList:null,
+
+         topicNumber:0,
             topicBodyStr: null,
             //input bar v-model以下
             question: null,
@@ -29,7 +32,27 @@ export default {
         }
     },
     mounted() {
+        let url = window.location.search;
+            let str = url.substring(url.indexOf("?") + 1);
+            this.number = parseInt(str);
+            let topicNumber = this.number
 
+            const body = {
+                number: topicNumber
+            }
+            console.log(body);
+            fetch("http://localhost:8080/get_question_info", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(body)
+            })
+                .then(res => res.json())
+                .then(data => {
+                  console.log(data);
+                  this.questionList = data.questionList
+                })
     },
 
     methods: {
@@ -113,7 +136,7 @@ export default {
             this.tempMust.push(`${this.must}`);
             // 創一個 物件放剛剛的陣列進去
             for (let i = 0; i < this.tempQ.length + 1; i++) {
-                this.test.questionList.push({
+                this.questionList.push({
                     name: this.tempQ[i],
                     options: this.tempOptions[i],
                     type: this.tempType[i],
@@ -126,13 +149,13 @@ export default {
                 delete this.tempMust[i]
             }
 
-            this.test.questionList = this.test.questionList.filter((item, index, self) => {
-                return (item.name !== undefined && item.options !== undefined && item.type !== undefined && item.must !== undefined)
-            })
+            // this.questionList = this.questionList.filter((item, index, self) => {
+            //     return (item.name !== undefined && item.options !== undefined && item.type !== undefined && item.must !== undefined)
+            // })
             console.log("here");
-            console.log(this.test.questionList);
+            console.log(this.questionList);
             //把處理好的問題資料儲存進 localstorage
-            localStorage.setItem('questionList', JSON.stringify(this.test.questionList));
+            // localStorage.setItem('questionList', JSON.stringify(this.test.questionList));
 
             // reset成null alert才能偵測 有資料沒填寫
             this.question = null
@@ -160,22 +183,10 @@ export default {
             if (this.question == null || this.option == null) {//this.tempType == null ||
                 window.alert("有資料沒填寫")
                 return
-            }//a b
-            // this.tempQ.push(`${this.question}`);
-            // this.tempOptions.push(`${this.option}`);
-            // this.tempType.push(`${this.type}`);
-            // this.tempMust.push(`${this.must}`);
-
-            //     this.test.questionList.push({
-            //     name: this.tempQ[this.numberForEdit],
-            //     options: this.tempOptions[this.numberForEdit],
-            //     type: this.tempType[this.numberForEdit],
-            //     must: this.tempMust[this.numberForEdit]
-            // })
-
+            }
             this.test.questionList = JSON.parse(localStorage.getItem("questionList"))
             console.log(this.test.questionList);
-            //直接複寫 即為更新
+
             this.test.questionList[this.numberForEdit] = {
                 name: this.question,
                 options: this.option,
@@ -189,15 +200,18 @@ export default {
             this.type = 1
             this.must = false
             this.joinOrEdit = true;
-        }
+        },
+        goBack(topicNumber){
+            this.$router.push(`/EditTopicView/?${this.number}`)
 
+        }
     }
 };
 </script>
 
 <template>
     <div>
-        <h1>新增問題頁面</h1>
+        <h1>編輯問題頁面</h1>
         <p>問題</p>
         <input type="text" v-model="question">
         <select name="" id="" v-model="type">
@@ -222,15 +236,15 @@ export default {
                     <th>必填</th>
 
                 </tr>
-                <tr v-for="(item, index) in test.questionList" :key="index">
+                <tr v-for="(item, index) in questionList" :key="index">
                     <td>{{ index + 1 }}</td>
-                    <td>{{ item.name }}</td>
+                    <td>{{ item.question }}</td>
                     <td>{{ item.type }}</td>
                     <td>{{ item.must }}</td>
                     <td>
                         <button type="button" @click="deleteQuetion(item.name)">刪除</button>
                         <button type="button"
-                            @click="goEdit(item.name, item.options, item.type, item.must, index)">編輯</button>
+                            @click="goEdit(item.question, item.options, item.type, item.must, index)">編輯</button>
                     </td>
 
                 </tr>
@@ -239,7 +253,7 @@ export default {
         </div>
 
     </div>
-    <button type="button">取消</button>
+    <button type="button" @click="goBack">取消</button>
     <button type="button" @click="addTopicAndQuestion">送出</button>
 </template>
 

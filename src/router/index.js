@@ -7,6 +7,8 @@ import AddTopicView from "../views/AddTopicView.vue"
 import AddQuestionView from "../views/AddQuestionView.vue"
 import FeedBackPageView from "../views/FeedBackPageView.vue"
 import FeedBackDetailView from "../views/FeedBackDetailView.vue"
+import AnswerQuestionView from "../views/AnswerQuestionView.vue"
+import EditQuestionView from "../views/EditQuestionView.vue"
 
 
 
@@ -58,6 +60,16 @@ const router = createRouter({
       path: '/FeedBackDetailView',
       name: 'FeedBackDetailView',
       component: FeedBackDetailView
+    },
+    {
+      path: '/AnswerQuestionView',
+      name: 'AnswerQuestionView',
+      component: AnswerQuestionView
+    },
+    {
+      path: '/EditQuestionView',
+      name: 'EditQuestionView',
+      component: EditQuestionView
     },
    
 

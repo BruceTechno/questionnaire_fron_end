@@ -15,7 +15,6 @@ export default{
     <div class="showData">
     <RouterView />
   </div>
-    <FooterView />
 
     
 </template>

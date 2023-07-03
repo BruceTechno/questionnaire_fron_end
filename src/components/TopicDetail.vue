@@ -48,7 +48,7 @@ export default {
                 .then(data => {
                     window.alert(data.message);
                     if (data.message == "Successful!!") {
-                        window.location.href = "/BackstageHomeView"
+                        this.$router.push(`/EditQuestionView?${this.number}`)
 
                     }
                 })

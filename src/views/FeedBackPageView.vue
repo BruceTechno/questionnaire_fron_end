@@ -28,10 +28,12 @@ export default {
                 })
     },
     methods:{
-        goFeedBackDetail(name,localDateTime){
-            this.$router.push(`/FeedBackDetailView`)
+        goFeedBackDetail(name,localDateTime,topicNumber){
+            this.$router.push(`/FeedBackDetailView/?${topicNumber}`)
             localStorage.setItem('userName',name)
             localStorage.setItem('ansTime',localDateTime)
+            // this.$router.push(`/FeedBackPageView/?${topicNumber}`)
+
         }
     }
 }
@@ -53,7 +55,7 @@ export default {
                     <td>{{ item.name }}</td>
                     <td>{{ item.localDateTime }}</td>
                     <td>
-                        <button type="button" @click="goFeedBackDetail(item.name,item.localDateTime)">前往</button>
+                        <button type="button" @click="goFeedBackDetail(item.name,item.localDateTime,number)">前往</button>
                     </td>
 
                 </tr>
