@@ -11,8 +11,8 @@ export default {
             questionList: null,
 
             option: [],
-            answer: []
-
+            answer: [],
+            sliceMultipulAnswer:[],
 
         }
     },
@@ -27,6 +27,7 @@ export default {
             name: localStorage.getItem('userName'),
             ansTime: localStorage.getItem('ansTime')
         }
+        console.log(body);
         fetch("http://localhost:8080/get_user_info", {
             method: "POST",
             headers: {
@@ -71,6 +72,22 @@ export default {
                 for (let i = 0; i < data.userList.length; i++) {
                     this.answer.push(data.userList[i].answer)
                 }
+                for (let i = 0; i < this.answer.length; i++) {
+                    if (this.answer[i].includes(";")) {
+                        
+                        this.sliceMultipulAnswer.push( this.answer[i].split(';'))
+                        this.answer[i] = ""
+                    }
+                  
+                }
+                for (let j = 0; j < this.sliceMultipulAnswer.length; j++) {
+                    for (let i = 0; i < this.sliceMultipulAnswer[j].length; i++) {
+                        this.answer.push(this.sliceMultipulAnswer[j][i])
+                    }
+                }
+                console.log(this.sliceMultipulAnswer);
+
+              
                 console.log("option below");
                 console.log(this.option);
                 console.log("answer below");

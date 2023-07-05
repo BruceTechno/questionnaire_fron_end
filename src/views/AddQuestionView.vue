@@ -125,7 +125,7 @@ export default {
                 delete this.tempType[i]
                 delete this.tempMust[i]
             }
-
+console.log(this.test.questionList);
             this.test.questionList = this.test.questionList.filter((item, index, self) => {
                 return (item.name !== undefined && item.options !== undefined && item.type !== undefined && item.must !== undefined)
             })

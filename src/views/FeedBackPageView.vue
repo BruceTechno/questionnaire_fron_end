@@ -28,10 +28,10 @@ export default {
                 })
     },
     methods:{
-        goFeedBackDetail(name,localDateTime,topicNumber){
+        goFeedBackDetail(name,localDate,topicNumber){
             this.$router.push(`/FeedBackDetailView/?${topicNumber}`)
             localStorage.setItem('userName',name)
-            localStorage.setItem('ansTime',localDateTime)
+            localStorage.setItem('ansTime',localDate)
             // this.$router.push(`/FeedBackPageView/?${topicNumber}`)
 
         }
@@ -53,9 +53,9 @@ export default {
                 <tr v-for="(item, index) in userList" :key="index">
                     <td>{{ index + 1 }}</td>
                     <td>{{ item.name }}</td>
-                    <td>{{ item.localDateTime }}</td>
+                    <td>{{ item.localDate }}</td>
                     <td>
-                        <button type="button" @click="goFeedBackDetail(item.name,item.localDateTime,number)">前往</button>
+                        <button type="button" @click="goFeedBackDetail(item.name,item.localDate,number)">前往</button>
                     </td>
 
                 </tr>

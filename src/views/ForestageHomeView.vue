@@ -28,10 +28,13 @@ export default {
                 this.topicList = data.topicList
                 console.log(typeof data.topicList[1].startTime);
                 this.totalPage = this.topicList.length / this.pageNumber
-
-            }),
+                this.getPageData(1)
+            })
+            if (this.time.getDate() < 10) {
+            this.now = `${this.time.getFullYear()}0${this.time.getMonth() + 1}0${this.time.getDate()}`
+        } else {
             this.now = `${this.time.getFullYear()}0${this.time.getMonth() + 1}${this.time.getDate()}`
-
+        }
     },
     methods: {
         addPage() {
@@ -45,7 +48,9 @@ export default {
             this.page = index //獲取當前的頁數是多少
             this.newData = this.topicList.slice((this.page - 1) * this.pageNumber, (this.page) * this.pageNumber);
         },
-
+        notNow(){
+            alert("未開放")
+        },
 
         getStatus(start, end) {
             if (+this.now < start) {
@@ -64,8 +69,8 @@ export default {
         addTopic() {
             this.$router.push(`/AddTopicView`)
         },
-        goFeedBack(topicNumber) {
-            this.$router.push(`/FeedBackPageView/?${topicNumber}`)
+        goFeedBack(topicNumber,topicName) {
+            this.$router.push(`/StatisticsView/?${topicNumber}`)
 
         },
         answerTopic(topicNumber){
@@ -107,7 +112,9 @@ export default {
                     <td>{{ getStatus(item.startTime, item.endTime) }}</td>
                     <td>{{ item.startTime }}</td>
                     <td>{{ item.endTime }}</td>
-                    <td><button type="button" @click="goFeedBack(item.number)">觀看</button></td>
+                    <td v-if="getStatus(item.startTime, item.endTime) === '未開放'"><button type="button" @click="notNow()">觀看</button></td>
+                    <td v-else><button type="button" @click="goFeedBack(item.number,item.name)">觀看</button></td>
+
                    <td><button type="button" @click="answerTopic(item.number)">填問卷 !</button></td>
 
                 </tr>
@@ -163,5 +170,12 @@ button {
         scale: 1.05;
     }
 }
+.pagination{
+    display: flex;
+    ul,li{
+        padding: 50px;
+    }
+}
+
 </style>
 

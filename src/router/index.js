@@ -9,6 +9,7 @@ import FeedBackPageView from "../views/FeedBackPageView.vue"
 import FeedBackDetailView from "../views/FeedBackDetailView.vue"
 import AnswerQuestionView from "../views/AnswerQuestionView.vue"
 import EditQuestionView from "../views/EditQuestionView.vue"
+import StatisticsView from "../views/StatisticsView.vue"
 
 
 
@@ -70,6 +71,11 @@ const router = createRouter({
       path: '/EditQuestionView',
       name: 'EditQuestionView',
       component: EditQuestionView
+    },
+    {
+      path: '/StatisticsView',
+      name: 'StatisticsView',
+      component: StatisticsView
     },
    
 
