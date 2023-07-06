@@ -15,7 +15,11 @@ export default {
             endTime: null,
             description: null,
             defaultStartTime: null,
+            defaultEndTimeTemp:null,
             defaultEndTime: null,
+            today:new Date,
+            timeForDefault:null,
+            test:null
         }
     },
     methods: {
@@ -85,7 +89,7 @@ export default {
                     if (this.startD < 10) {
                         this.startD = "0" + this.startD
                     }
-                    console.log(this.startY + "-" + this.startM + "-" + this.startD);
+                    
                     this.defaultStartTime = this.startY + "-" + this.startM + "-" + this.startD
                     //結束時間 預設
                     this.endTime = data.topic.endTime;
@@ -104,6 +108,10 @@ export default {
         },
         //新增頁面裡的方法
         addTopic() {
+            if (this.defaultStartTime > this.defaultEndTime || this.defaultStartTime < this.timeForDefault) {
+                alert("時間錯誤")
+                return
+            }
                     // 不能存body???????????
             // Snumber = Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000,
             //     //Math.floor(Math.random() * (max - min + 1)) + min
@@ -131,26 +139,52 @@ export default {
     mounted() {
         if (this.addOrEdit == 'edit') {
             this.getOldTopicInfo();
+        }else{
+            this.defaultStartTime = this.timeForDefault
+        }
+        if (this.today.getMonth() <9 && this.today.getDate() > 10) {
+            this.timeForDefault = `${this.today.getFullYear()}-0${this.today.getMonth()+1}-${this.today.getDate()}`
+        }
+        if (this.today.getMonth() < 9 && this.today.getDate() < 10) {
+           this.timeForDefault = `${this.today.getFullYear()}-0${this.today.getMonth()+1}-0${this.today.getDate()}`    
+        }
+        if (this.today.getMonth() > 9 && this.today.getDate() < 10) {
+            this.timeForDefault =  `${this.today.getFullYear()}-${this.today.getMonth()+1}-0${this.today.getDate()}`
+        }
+        this.defaultStartTime = this.timeForDefault
+        //新增問卷時 結束時間的預設 今天+7
+        if (this.today.getMonth() <9 && this.today.getDate() > 10) {
+            this.defaultEndTime = `${this.today.getFullYear()}-0${this.today.getMonth()+1}-${this.today.getDate()+7}`
+        }
+        if (this.today.getMonth() < 9 && this.today.getDate()+7 < 10) {
+           this.defaultEndTime = `${this.today.getFullYear()}-0${this.today.getMonth()+1}-0${this.today.getDate()+7}`    
+        }else{
+            this.defaultEndTime = `${this.today.getFullYear()}-0${this.today.getMonth()+1}-${this.today.getDate()+7}`
         }
 
-
-
+        if (this.today.getMonth() > 9 && this.today.getDate()+7 < 10) {
+            this.defaultEndTime =  `${this.today.getFullYear()}-${this.today.getMonth()+1}-0${this.today.getDate()+7}`
+        }else{
+            this.defaultEndTime = `${this.today.getFullYear()}-0${this.today.getMonth()+1}-${this.today.getDate()+7}`
+        }
+    console.log(this.timeForDefault);
     },
+    
     props: ["addOrEdit"]
 }
 </script>
 
 <template>
+    <div class="wrapper">
     <div class="name">
         <p>問卷名稱</p>
         <input type="text" name="123" v-model="name">
-
         <p>開始時間</p>
-        <input type="date" name="" id="start" v-model="defaultStartTime">
-
+        <input type="date"  v-model="defaultStartTime"  >
+        <!-- :value="timeForDefault" -->   
+        <!--  v-model="defaultStartTime" -->
         <p>結束時間</p>
-        <input type="date" name="" id="end" v-model="defaultEndTime">
-
+        <input type="date" name="time" id="end" v-model="defaultEndTime">
         <p>描述內容</p>
         <textarea name="" id="" cols="30" rows="10" v-model="description">
             {{ description }}
@@ -159,6 +193,7 @@ export default {
     <button type="button" @click="cancel">取消</button>
     <button v-if="addOrEdit == 'edit'" type="button" @click="save">儲存</button>
     <button v-else type="button" @click="addTopic">下一步</button>
+</div>
 </template>
 
 <style lang="scss" scoped></style>

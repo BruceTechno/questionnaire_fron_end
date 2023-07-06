@@ -1,5 +1,11 @@
 <script>
+import { number } from 'echarts';
+import FuctionSelect from "../components/FunctionSelect.vue"
+
 export default {
+    components: {
+        FuctionSelect
+    },
     data() {
         return {
             name: null,
@@ -93,12 +99,21 @@ export default {
                 console.log("answer below");
                 console.log(this.answer);
             })
+            
+    },
+    methods: {
+        goFeedBack() {
+            this.$router.push(`/StatisticsView/?${this.number}`)
+        }
     },
     // 0:[a,b,c,d]
 }
 </script>
 
 <template>
+    <div class="wrapper">
+            <FuctionSelect :number="number" :isUser="0" />
+
     <div>
         <h1>feed back detail</h1>
         <span>姓名</span>
@@ -114,7 +129,8 @@ export default {
     </div>
             <!-- 問題 -->
     <div v-for="(item, index) in questionList" :key="index" class="questionList">
-        <p>{{ index + 1 }}.{{ item.question }}</p>
+        <p v-if="item.must == false">{{ index + 1 }}.{{ item.question }}</p>
+        <p v-else>{{ index + 1 }}.{{ item.question }}(必填)</p>
         <!-- 選項-- 單選 -->
         <div v-for="(op, i) in option[index]" :key="i" class="radio">
             <div class="single" v-if="item.type == 1" disabled="true">
@@ -133,6 +149,13 @@ export default {
         </div>             
 
     </div>
+</div>
+    <button type="button" @click="goFeedBack()">觀看統計圖</button>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.wrapper{
+    
+    
+}
+</style>

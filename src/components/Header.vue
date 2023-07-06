@@ -11,8 +11,7 @@ export default {
 
 <template>
     <div class="wrapper">
-        <h2>Header+++</h2>
-        <RouterLink to="/" class="link">Go Home喔</RouterLink>
+        <RouterLink to="/" class="link">Go Home</RouterLink>
 
     </div>
 </template>

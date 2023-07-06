@@ -6,7 +6,7 @@ export default {
             topicBodyStr: null,
             //input bar v-model以下
             question: null,
-            must: false,
+            must2: false,
             option: null,
             type: 1,
             endTime: 0,
@@ -94,7 +94,7 @@ export default {
                     console.log(data);
                     window.alert(data.message)
                     if (data.message == "Successful!!") {
-                        window.location.reload();
+                        location.href = '/BackstageHomeView'
 
                     }
 
@@ -110,7 +110,7 @@ export default {
             this.tempQ.push(`${this.question}`);
             this.tempOptions.push(`${this.option}`);
             this.tempType.push(`${this.type}`);
-            this.tempMust.push(`${this.must}`);
+            this.tempMust.push(`${this.must2}`);
             // 創一個 物件放剛剛的陣列進去
             for (let i = 0; i < this.tempQ.length + 1; i++) {
                 this.test.questionList.push({
@@ -138,7 +138,7 @@ console.log(this.test.questionList);
             this.question = null
             this.option = null
             this.type = 1
-            this.must = false
+            this.must2 = false
         },
         deleteQuetion(name) {
             this.test.questionList = this.test.questionList.filter(item => {
@@ -150,7 +150,7 @@ console.log(this.test.questionList);
             this.question = name;
             this.option = option;
             this.type = type;
-            this.must = must;
+            this.must2 = must;
             this.joinOrEdit = false;
             this.numberForEdit = index
         },
@@ -161,18 +161,7 @@ console.log(this.test.questionList);
                 window.alert("有資料沒填寫")
                 return
             }//a b
-            // this.tempQ.push(`${this.question}`);
-            // this.tempOptions.push(`${this.option}`);
-            // this.tempType.push(`${this.type}`);
-            // this.tempMust.push(`${this.must}`);
-
-            //     this.test.questionList.push({
-            //     name: this.tempQ[this.numberForEdit],
-            //     options: this.tempOptions[this.numberForEdit],
-            //     type: this.tempType[this.numberForEdit],
-            //     must: this.tempMust[this.numberForEdit]
-            // })
-
+        
             this.test.questionList = JSON.parse(localStorage.getItem("questionList"))
             console.log(this.test.questionList);
             //直接複寫 即為更新
@@ -180,14 +169,14 @@ console.log(this.test.questionList);
                 name: this.question,
                 options: this.option,
                 type: this.type,
-                must: this.must
+                must: this.must2
             }
             localStorage.setItem('questionList', JSON.stringify(this.test.questionList));
             // reset成null alert才能偵測 有資料沒填寫
             this.question = null
             this.option = null
             this.type = 1
-            this.must = false
+            this.must2 = false
             this.joinOrEdit = true;
         }
 
@@ -204,7 +193,7 @@ console.log(this.test.questionList);
             <option value="1">單選</option>
             <option value="2">多選</option>
         </select>
-        <input type="checkbox" id="must" value="" v-model="must">
+        <input type="checkbox" id="must"  v-model="must2">
         <span>必填</span>
         <p>選項</p>
         <input type="text" v-model="option">
@@ -225,8 +214,14 @@ console.log(this.test.questionList);
                 <tr v-for="(item, index) in test.questionList" :key="index">
                     <td>{{ index + 1 }}</td>
                     <td>{{ item.name }}</td>
-                    <td>{{ item.type }}</td>
-                    <td>{{ item.must }}</td>
+                    <td v-if="item.type == 1">單選</td>
+                    <td v-else>多選</td>
+
+                    <td v-if="item.must === 'true'">必填</td>
+                    <td v-else>非必填</td>
+
+                    <!-- <td v-if="item.must !== 'true'">非必填</td> -->
+        
                     <td>
                         <button type="button" @click="deleteQuetion(item.name)">刪除</button>
                         <button type="button"

@@ -1,16 +1,18 @@
-
 <script>
 import * as echarts from 'echarts';
-
+import FuctionSelect from "../components/FunctionSelect.vue"
 // require('echarts/theme/macarons');//引入主题
 export default {
-
+    components: {
+        FuctionSelect
+    },
     data() {
         return {
             chartPie: null,
             chartPieData: [{}],
             question:null,
-            
+            defaultChartPieQuestion:null,
+
             number: 0,
             topicName: null,
             questionList: null,
@@ -42,7 +44,9 @@ export default {
                         this.optionList[i] = (data.questionList[i].options.split(';'))
                     }
                 }
-                console.log(this.optionList[0]);
+                console.log(this.questionList);
+                this.callDrawPieChart(0,this.questionList[0].question);
+
             })
         const topicBody = {
             number: this.number,
@@ -59,13 +63,14 @@ export default {
             .then(data => {
                 console.log(data);
                 this.topicName = data.topic.name
-            })
 
+            })
 
     },
     methods: {
         drawPieChart(question, index) {
-           
+           console.log(question);
+           console.log(index);
             let mytextStyle = {
                 color: "#333",
                 fontSize: 18,
@@ -116,17 +121,16 @@ export default {
                 ]
             });
         },
-        test() {
-            console.log(this.optionList[2].length);
-        },
+      
         callDrawPieChart(index,question) {
             this.chartPieData =  [{}]
-            console.log(this.optionList[index].length);
+            console.log(this.optionList );
             for (let j = 0; j < this.optionList[index].length; j++) {
 
                 const body = {
                     number: this.number,
-                    answer: this.optionList[index][j]
+                    answer: this.optionList[index][j],
+                    question:question
                 };
                 console.log(body);
                 fetch("http://localhost:8080/get_statistics", {
@@ -153,6 +157,7 @@ export default {
 </script>
 
 <template>
+                <FuctionSelect :number="number" :isUser="1"/>
     <p>統計畫面</p>
     <h1>{{ topicName }}</h1>
     <div v-for="(item, index) in questionList" :key="index">
