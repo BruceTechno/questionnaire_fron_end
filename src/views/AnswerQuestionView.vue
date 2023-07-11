@@ -16,7 +16,7 @@ export default {
 
             number: null,
 
-            isChecked:0,
+            isChecked: 0,
         }
     },
     mounted() {
@@ -80,30 +80,28 @@ export default {
             console.log(this.answers);
             console.log(temp);
         },
-        checked(){
+        checked() {
             this.isChecked = 1;
 
             console.log("hi");
             console.log(this.checked);
-         },
-         cancel(){
+        },
+        cancel() {
             this.isChecked = 0;
 
-         },
+        },
         send() {
             //必填檢查
             for (let i = 0; i < this.questionList.length; i++) {
-              for (let j = 0; j < i; j++) {
-                if (this.questionList[i].must == true &&
-                this.answers[j]== null  ) {
-                    alert("有必填沒作答喔")
-                    return;
+                for (let j = 0; j < i+1; j++) {
+                    if (this.questionList[i].must == true &&
+                        this.answers[j] == undefined) {
+                        alert("有必填沒作答喔")
+                        return;
+                    }
                 }
-                
-              }
-                
             }
-        
+
 
 
             let body = {
@@ -112,16 +110,16 @@ export default {
             }
             for (let i = 0; i < this.answers.length; i++) {
                 let resAnswer = "";
-                this.answers[i].forEach((item,index) => {
-                    console.log(item);
-                    if (index === this.answers[i].length-1) {
+                this.answers[i].forEach((item, index) => {
+                    // console.log(item);
+                    if (index === this.answers[i].length - 1) {
                         resAnswer += item
                         return
                     }
                     resAnswer += `${item};`
                     console.log(resAnswer);
                 });
-                console.log(resAnswer);
+                // console.log(resAnswer);
 
                 body.userList.push({
                     name: this.userName,
@@ -132,7 +130,7 @@ export default {
                     answer: resAnswer
                 })
             }
-            
+
             console.log(body);
             fetch("http://localhost:8080/add_user_info", {
                 method: "POST",
@@ -178,40 +176,40 @@ export default {
         <input type="text" v-model="age">
     </div>
     <!-- checked Page if div -->
-    <div    >
-    <!-- 問題 -->
-    <div v-for="(item, index) in questionList" :key="index" class="questionList">
-        <p v-if="item.must == false">{{ index + 1 }}.{{ item.question }}</p>
-        <p v-else>{{ index + 1 }}.{{ item.question }}(必填)</p>
-        
-        <!-- 選項-- 單選 -->
-        <div v-for="(op, i) in optionList[index]" :key="i" class="radio">
-            <div v-if="item.type == 1" class="single">
-                <!-- 選答案 v-if -->
-                <input :disabled="isChecked === 1" @change="addAnswer(op, index)" type="radio" :name="index">
-                <!-- <input v-else type="radio" disabled="true"> -->
-                <label>{{ op }}</label>
-            </div>
-            <!-- 選項--多選 -->
-            <div v-else class="multiple">
-                <!-- 選答案 v-if -->
-                <input :disabled="isChecked === 1" @change="addMultipleAnswer(op, index)" type="checkbox">
-                <!-- <input v-else type="checkbox" disabled="true"> -->
-                <label>{{ op }}</label>
+    <div>
+        <!-- 問題 -->
+        <div v-for="(item, index) in questionList" :key="index" class="questionList">
+            <p v-if="item.must == false">{{ index + 1 }}.{{ item.question }}</p>
+            <p v-else>{{ index + 1 }}.{{ item.question }}(必填)</p>
+
+            <!-- 選項-- 單選 -->
+            <div v-for="(op, i) in optionList[index]" :key="i" class="radio">
+                <div v-if="item.type == 1" class="single">
+                    <!-- 選答案 v-if -->
+                    <input :disabled="isChecked === 1" @change="addAnswer(op, index)" type="radio" :name="index">
+                    <!-- <input v-else type="radio" disabled="true"> -->
+                    <label>{{ op }}</label>
+                </div>
+                <!-- 選項--多選 -->
+                <div v-else class="multiple">
+                    <!-- 選答案 v-if -->
+                    <input :disabled="isChecked === 1" @change="addMultipleAnswer(op, index)" type="checkbox">
+                    <!-- <input v-else type="checkbox" disabled="true"> -->
+                    <label>{{ op }}</label>
+                </div>
             </div>
         </div>
+
+        <button v-if="isChecked === 0" type="button" @click="checked">確認</button>
+        <button v-else type="button" @click="send">送出</button>
+
+        <button v-if="isChecked === 1" type="button" @click="cancel">取消</button>
+
     </div>
-    
-    <button v-if="isChecked === 0" type="button"  @click="checked">確認</button>
-    <button v-else type="button"  @click="send">送出</button>
-    
-    <button v-if="isChecked === 1" type="button"  @click="cancel">取消</button>
-    
-</div>
 
-    
 
-   
+
+
     <!-- <button  type="button"  @click="send">送出</button> -->
 </template>
 

@@ -79,18 +79,17 @@ export default {
                     this.answer.push(data.userList[i].answer)
                 }
                 for (let i = 0; i < this.answer.length; i++) {
-                    if (this.answer[i].includes(";")) {
-                        
-                        this.sliceMultipulAnswer.push( this.answer[i].split(';'))
+                    if (this.answer[i].includes(";")) {  
+                        this.sliceMultipulAnswer[i] = []
+                        this.sliceMultipulAnswer[i] = ( this.answer[i].split(';'))
                         this.answer[i] = ""
                     }
-                  
                 }
-                for (let j = 0; j < this.sliceMultipulAnswer.length; j++) {
-                    for (let i = 0; i < this.sliceMultipulAnswer[j].length; i++) {
-                        this.answer.push(this.sliceMultipulAnswer[j][i])
-                    }
-                }
+                // for (let j = 0; j < this.sliceMultipulAnswer.length; j++) {
+                //     for (let i = 0; i < this.sliceMultipulAnswer[j].length; i++) {
+                //         this.answer.push(this.sliceMultipulAnswer[j][i])
+                //     }
+                // }
                 console.log(this.sliceMultipulAnswer);
 
               
@@ -135,17 +134,20 @@ export default {
         <div v-for="(op, i) in option[index]" :key="i" class="radio">
             <div class="single" v-if="item.type == 1" disabled="true">
                 <!-- 選答案 v-if -->
-                <input v-if="answer.includes(op)" type="radio" checked disabled="true">
+                <input v-if="answer[index]== op" type="radio" checked disabled="true">
                 <input v-else type="radio" disabled="true">
                 <label>{{ op }}</label>  
             </div>
+            
             <!-- 選項--多選 -->
             <div class="multiple" v-else>
                 <!-- 選答案 v-if -->
-                <input v-if="answer.includes(op)" type="checkbox" disabled="true" checked>
+                <input v-if="sliceMultipulAnswer[index].includes(op)" type="checkbox" disabled="true" checked>
                 <input v-else type="checkbox" disabled="true">
                 <label>{{ op }}</label>
+                
             </div>
+
         </div>             
 
     </div>

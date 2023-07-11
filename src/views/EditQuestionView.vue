@@ -34,7 +34,9 @@ export default {
             joinOrEdit: true,
             // 為了要知道 是要對哪一個問題的編號做編輯
             numberForEdit: 0,
-            questionListForEdit:[]
+            questionListForEdit:[],
+            //update API message
+            updateMessage:null,
         }
     },
     mounted() {
@@ -65,7 +67,7 @@ export default {
     },
 
     methods: {
-        addTopicAndQuestion() {
+        updateQuestion() {
             console.log(JSON.parse(localStorage.getItem("questionList")));
             let editInfo = JSON.parse(localStorage.getItem("questionList"));
             
@@ -91,7 +93,9 @@ export default {
                 .then(res => res.json())
                 .then(data => {
                     console.log(data);
-                    alert(data.message)
+                    if (i == editInfo.length-1) {
+                        alert(data.message)
+                    }
                 })
             }
         },// method : addTopicAndQuestion 到此
@@ -252,7 +256,7 @@ export default {
     </div>
 
     <button type="button" @click="goBack">取消</button>
-    <button type="button" @click="addTopicAndQuestion">送出</button>
+    <button type="button" @click="updateQuestion">送出</button>
 </template>
 
 <style lang="scss" scoped>

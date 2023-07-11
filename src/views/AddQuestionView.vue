@@ -33,6 +33,10 @@ export default {
     },
 
     methods: {
+        cancel(){
+            this.$router.push(`/AddTopicView`)
+            
+        },
         addTopicAndQuestion() {
             //新增問卷API
             const topicBody = {
@@ -106,7 +110,15 @@ export default {
             if (this.question == null || this.option == null) {//this.tempType == null ||
                 window.alert("有資料沒填寫")
                 return
-            }//把輸入的問題資料都先存到陣列裡面
+            }
+            console.log(this.option.split(";").length);
+           
+            if(this.option.split(";").length < 2){
+                alert("用分號隔開啦")
+                return
+            }
+            
+            //把輸入的問題資料都先存到陣列裡面
             this.tempQ.push(`${this.question}`);
             this.tempOptions.push(`${this.option}`);
             this.tempType.push(`${this.type}`);
@@ -234,7 +246,7 @@ console.log(this.test.questionList);
         </div>
 
     </div>
-    <button type="button">取消</button>
+    <button type="button" @click="cancel">取消</button>
     <button type="button" @click="addTopicAndQuestion">送出</button>
 </template>
 

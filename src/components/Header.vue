@@ -11,7 +11,8 @@ export default {
 
 <template>
     <div class="wrapper">
-        <RouterLink to="/" class="link">Go Home</RouterLink>
+        
+        <RouterLink to="/" class="link">動態問卷系統</RouterLink>
 
     </div>
 </template>
@@ -20,10 +21,10 @@ export default {
 .wrapper {
     width: 100%;
     background-color: #2e5265;
-
+    text-align: center;
     h2 {
         margin: 0;
-        font-size: 50px;
+        font-size: 40px;
         text-align: center;
     }
 }
