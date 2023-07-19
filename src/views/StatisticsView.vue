@@ -12,12 +12,14 @@ export default {
             chartPieData: [{}],
             question:null,
             defaultChartPieQuestion:null,
-
+            
             number: 0,
             topicName: null,
             questionList: null,
             tempOptions: null,
-            optionList: []
+            optionList: [],
+
+            
         }
     },
     mounted() {
@@ -82,7 +84,7 @@ export default {
                 formatter: '{b} : {c} ({d}%)',
                 textStyle: mytextStyle
             };
-            this.chartPie = echarts.init(document.getElementById('chartPie'), 'macarons');
+            this.chartPie = echarts.init(document.getElementById(`chartPie`), 'macarons');
             this.chartPie.setOption({
                 title: {
                     text: question,
@@ -113,7 +115,7 @@ export default {
                         //     {value: 135, name: this.optionList[index][3]},
                         //   ],
                         animationEasing: 'cubicInOut',
-                        animationDuration: 2600,
+                        animationDuration: 260,
                         label: {
                             emphasis: mylabel
                         }
@@ -146,11 +148,11 @@ export default {
                         this.chartPieData.push(
                             {value:data.result,name:this.optionList[index][j] }
                         )
-                        
                         this.drawPieChart(question,index);
+
                     })
             }
-//for
+
         }
     }
 }
@@ -163,9 +165,14 @@ export default {
     <div v-for="(item, index) in questionList" :key="index">
         <span>{{ index + 1 }}. </span>
         <button type="button" @click="callDrawPieChart(index,item.question)"> {{ item.question }}</button>
+
     </div>
     <!-- @click="drawPieChart(item.question,index)" -->
+    
     <div id="chartPie" class="pie-wrap"></div>
+    
+  
+
 </template>
 
 <style lang="scss" scoped>

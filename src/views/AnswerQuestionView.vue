@@ -91,12 +91,20 @@ export default {
 
         },
         send() {
+          
             //必填檢查
+            if (this.userName === null || this.phone === null || this.mail === null || this.age === null) {
+                alert(`個人資料必填喔`);
+                return;
+            }
+            if (this.age < 0) {
+                alert("年齡怎麼會是負的呢????")
+            }
             for (let i = 0; i < this.questionList.length; i++) {
                 for (let j = 0; j < i+1; j++) {
                     if (this.questionList[i].must == true &&
                         this.answers[j] == undefined) {
-                        alert("有必填沒作答喔")
+                        alert(`${this.questionList[i].question}為必填!!! 請作答喔`)
                         return;
                     }
                 }
@@ -112,6 +120,7 @@ export default {
                 let resAnswer = "";
                 this.answers[i].forEach((item, index) => {
                     // console.log(item);
+                              
                     if (index === this.answers[i].length - 1) {
                         resAnswer += item
                         return
@@ -173,7 +182,7 @@ export default {
         <input type="text" v-model="mail">
         <br><br>
         <span>年齡</span>
-        <input type="text" v-model="age">
+        <input type="number" v-model="age">
     </div>
     <!-- checked Page if div -->
     <div>
@@ -204,7 +213,6 @@ export default {
         <button v-else type="button" @click="send">送出</button>
 
         <button v-if="isChecked === 1" type="button" @click="cancel">取消</button>
-
     </div>
 
 

@@ -52,20 +52,7 @@ export default {
                 this.mail = data.userList[0].mail
                 this.age = data.userList[0].age
                 this.ansTime = data.userList[0].ansTime
-                console.log("下面是log questionlist");
 
-                console.log(this.questionList);
-
-                // 狀況 => 有些選項可以是空的 切不了
-                // data.questionList.forEach(item => { 
-                //     console.log(item.options.split(';')); 
-                //     if (item.options.includes(";")) {
-                //         this.optionList.push(item.options.split(';'))
-                //     }else{
-                //         this.optionList.push("無作答")
-                //     }
-                //     console.log(this.optionList);
-                // });
                 for (let i = 0; i < data.questionList.length; i++) {
                     if (data.questionList[i].options.includes(";")) {
                         this.option.push(data.questionList[i].options.split(';'))
@@ -85,14 +72,10 @@ export default {
                         this.answer[i] = ""
                     }
                 }
-                // for (let j = 0; j < this.sliceMultipulAnswer.length; j++) {
-                //     for (let i = 0; i < this.sliceMultipulAnswer[j].length; i++) {
-                //         this.answer.push(this.sliceMultipulAnswer[j][i])
-                //     }
-                // }
+            
                 console.log(this.sliceMultipulAnswer);
 
-              
+             
                 console.log("option below");
                 console.log(this.option);
                 console.log("answer below");
@@ -140,12 +123,20 @@ export default {
             </div>
             
             <!-- 選項--多選 -->
-            <div class="multiple" v-else>
+            <div class="multiple" v-else>   
                 <!-- 選答案 v-if -->
-                <input v-if="sliceMultipulAnswer[index].includes(op)" type="checkbox" disabled="true" checked>
-                <input v-else type="checkbox" disabled="true">
-                <label>{{ op }}</label>
-                
+                <!-- 解決多選題卻只選一選項之 v-if div -->
+                <div v-if="sliceMultipulAnswer[index] !== undefined">
+                    <input v-if="sliceMultipulAnswer[index].includes(op)" type="checkbox" disabled="true" checked>
+                     <input v-else type="checkbox" disabled="true">
+                    <label>{{ op }}</label>
+                 </div>
+                 <!-- 解決多選題卻只選一選項之 v-else div -->
+                <div v-else>
+                    <input v-if="answer[index]== op" type="checkbox" disabled="true" checked>
+                     <input v-else type="checkbox" disabled="true">
+                    <label>{{ op }}</label>
+                </div>
             </div>
 
         </div>             
