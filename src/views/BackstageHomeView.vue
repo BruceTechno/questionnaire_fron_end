@@ -79,7 +79,7 @@ export default {
             this.newData = this.topicList.slice((this.page - 1) * this.pageNumber, (this.page) * this.pageNumber);
         },
         lastPage() {
-            this.page = this.totalPage //獲取當前的頁數是多少
+            this.page = Math.ceil(this.totalPage) //獲取當前的頁數是多少
             this.newData = this.topicList.slice((this.page - 1) * this.pageNumber, (this.page) * this.pageNumber);
         },
         notNow() {
@@ -248,7 +248,7 @@ export default {
             </div>
 
         </div>
-        <p>現在頁碼{{ page }}</p>
+        <p>現在頁碼: {{ page }}</p>
 
         <div v-if="isSearch == false" class="pagination">
             <div><a href="#" @click="firstPage()">第一頁</a></div>

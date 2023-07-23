@@ -84,7 +84,7 @@ export default {
                 formatter: '{b} : {c} ({d}%)',
                 textStyle: mytextStyle
             };
-            this.chartPie = echarts.init(document.getElementById(`chartPie`), 'macarons');
+            this.chartPie = echarts.init(document.getElementById(index), 'macarons');
             this.chartPie.setOption({
                 title: {
                     text: question,
@@ -165,11 +165,12 @@ export default {
     <div v-for="(item, index) in questionList" :key="index">
         <span>{{ index + 1 }}. </span>
         <button type="button" @click="callDrawPieChart(index,item.question)"> {{ item.question }}</button>
+        <div :id="index" class="pie-wrap"></div>
 
     </div>
     <!-- @click="drawPieChart(item.question,index)" -->
     
-    <div id="chartPie" class="pie-wrap"></div>
+    <!-- <div :id="index" class="pie-wrap"></div> -->
     
   
 
