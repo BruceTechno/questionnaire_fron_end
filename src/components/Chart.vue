@@ -19,7 +19,7 @@ export default {
             tempOptions: null,
             optionList: [],
 
-
+// 1.number
         }
     },
     mounted() {

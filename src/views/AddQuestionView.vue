@@ -114,7 +114,7 @@ export default {
             console.log(this.option.split(";").length);
            
             if(this.option.split(";").length < 2){
-                alert("用分號隔開啦")
+                alert("請用分號隔開")
                 return
             }
             
@@ -122,7 +122,7 @@ export default {
             this.tempQ.push(`${this.question}`);
             this.tempOptions.push(`${this.option}`);
             this.tempType.push(`${this.type}`);
-            this.tempMust.push(`${this.must2}`);
+            this.tempMust.push(this.must2);
             // 創一個 物件放剛剛的陣列進去
             for (let i = 0; i < this.tempQ.length + 1; i++) {
                 this.test.questionList.push({
@@ -228,8 +228,7 @@ console.log(this.test.questionList);
                     <td>{{ item.name }}</td>
                     <td v-if="item.type == 1">單選</td>
                     <td v-else>多選</td>
-
-                    <td v-if="item.must === 'true'">必填</td>
+                    <td v-if="item.must === true">必填</td>
                     <td v-else>非必填</td>
 
                     <!-- <td v-if="item.must !== 'true'">非必填</td> -->

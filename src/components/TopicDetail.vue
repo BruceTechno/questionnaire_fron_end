@@ -52,7 +52,7 @@ export default {
                 .then(data => {
                     window.alert(data.message);
                     if (data.message == "Successful!!") {
-                        this.$router.push(`/EditQuestionView?${this.number}`)
+                        this.$router.push(`/BackstageHomeView?${this.number}`)
 
                     }
                 })

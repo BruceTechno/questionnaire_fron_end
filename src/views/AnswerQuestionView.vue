@@ -17,6 +17,10 @@ export default {
             number: null,
 
             isChecked: 0,
+            //信箱格式正規驗證
+            isValidEmail: true,
+            //電話格式驗證
+            isValidPhone: true,
         }
     },
     mounted() {
@@ -91,7 +95,7 @@ export default {
 
         },
         send() {
-          
+
             //必填檢查
             if (this.userName === null || this.phone === null || this.mail === null || this.age === null) {
                 alert(`個人資料必填喔`);
@@ -101,7 +105,7 @@ export default {
                 alert("年齡怎麼會是負的呢????")
             }
             for (let i = 0; i < this.questionList.length; i++) {
-                for (let j = 0; j < i+1; j++) {
+                for (let j = 0; j < i + 1; j++) {
                     if (this.questionList[i].must == true &&
                         this.answers[j] == undefined) {
                         alert(`${this.questionList[i].question}為必填!!! 請作答喔`)
@@ -120,7 +124,7 @@ export default {
                 let resAnswer = "";
                 this.answers[i].forEach((item, index) => {
                     // console.log(item);
-                              
+
                     if (index === this.answers[i].length - 1) {
                         resAnswer += item
                         return
@@ -157,14 +161,31 @@ export default {
                 })
 
         }
-    }
+    },
+    watch: {
+        mail: {
+            handler: function () {
+                const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+                this.isValidEmail = emailRegex.test(this.mail);
+            }
+        },
+        phone: {
+            handler: function () {
+                const phoneRegex = /^09\d{8}$/;
+                this.isValidPhone = phoneRegex.test(this.phone)
+            }
+        }
+
+
+
+    },
 }
 
 </script>
 
 <template>
     <div>
-        <h1>填問卷喔</h1>
+        <h1>填寫問卷</h1>
         <h2>問卷題目</h2>
         <p>{{ topicName }}</p>
         <h2>問卷說明</h2>
@@ -176,10 +197,17 @@ export default {
         <input type="text" v-model="userName">
         <br><br>
         <span>手機</span>
-        <input type="text" v-model="phone">
+        <input v-if="isValidPhone" type="text" v-model.lazy="phone">
+        <input v-else class="error" type="text" v-model.lazy="phone">
+        <span v-if="isValidPhone"></span>
+        <span v-else class="x">X</span>
         <br><br>
         <span>Email</span>
-        <input type="text" v-model="mail">
+        <input v-if="isValidEmail" type="text" v-model.trim.lazy="mail">
+        <input v-else class="error" type="text" v-model.trim.lazy="mail">
+        <span v-if="isValidEmail"></span>
+        <span v-else class="x">X</span>
+
         <br><br>
         <span>年齡</span>
         <input type="number" v-model="age">
@@ -221,4 +249,16 @@ export default {
     <!-- <button  type="button"  @click="send">送出</button> -->
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+h1 {
+    text-align: center;
+}
+
+.error {
+    border: 2px solid red;
+}
+
+.x {
+    color: red
+}
+</style>
